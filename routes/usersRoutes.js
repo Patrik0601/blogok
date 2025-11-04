@@ -69,24 +69,28 @@ router.get("/me", auth, (req, res) => {
     res.json(user)
 })
 
+router.delete("/", auth, (req, res) => {
+    Users.deleteUser(+req.userId)
+    delete req.body;
+    delete req.headers.authorization
+    res.status(200).json({ message: "Delete success"});
+})
+
 function auth(req, res, next){
     try{
         const accessToken = req.headers.authorization
         if(!accessToken){
-            return res.status(401).json({message: "Unauthorized"})
+            return res.status(401).json({message: "Unauthorized"});
         }
-        const token = accessToken.split(' ')[1]
-        const data = jwt.verify(token, "secret_key")
-        const now = Math.floor(Date.now() / 1000)
-        if(data?.exp < now){
-            return res.status(403).json({message: "Token expired"})
-        }
-        req.userId = data.id
-        req.userEmail = data.email
-        next()
+        const token = accessToken.split(' ')[1];
+        const data = jwt.verify(token, "secret_key");
+        req.userId = data.id;
+        req.userEmail = data.email;
+        next();
     }catch(err){
-        res.status(500).json({error: err.message})
+        res.status(500).json({error: err});
     }
 }
 
-export default router
+export default router;
+export {auth} 
