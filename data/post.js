@@ -1,6 +1,7 @@
 import db from "./db.js"
 
-db.prepare(`CREATE TABLE IF NOT EXISTS posts (
+db.prepare(
+    `CREATE TABLE IF NOT EXISTS posts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userId INTEGER;
     title TEXT,
